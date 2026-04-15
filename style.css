@@ -1,0 +1,27 @@
+body{
+    background-color: darkslateblue;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+#myButton{
+    display: inline;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#myButton:hover{
+    background-color: black;
+    color: white;
+}
+
+
