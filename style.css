@@ -2,8 +2,46 @@ body{
     background-color: darkslateblue;
 }
 
+table{
+    /* border-collapse: collapse; */
+    font-size: 30px;
+    border: 5px solid rgb(1, 255, 69);
+    width: 100vh;
+    height: 90%;
+    /* margin: 20px auto; */
+}
+
+.table-2{
+    border: 5px solid rgb(17, 0, 255);
+}
+
+
+
+
+tr{
+    border: 5px solid black;
+}
+
+td{
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+
+h1{
+    /* text at the center of the page by x and y axis */
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+}
+
+
+
+
 .container{
-    display: flex;
+    display: grid;
     justify-content: center;
     align-items: center;
     height: 90vh;
