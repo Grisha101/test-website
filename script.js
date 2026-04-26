@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 let a = 10;
 let b = "Hello, World!";
 const c = 3.14;
@@ -11,16 +26,13 @@ console.log(c);
 console.log(d);
 
 
-
 // alert("This is an alert message!");
 
 // let name = prompt("Please enter your name:");
 
 // alert("The value of name is: " + name);
 
-
 // let decision = confirm("Do you want to proceed?"); // Returns true or false
-
 
 
 // if (decision) {
