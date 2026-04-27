@@ -15,9 +15,6 @@ table{
     border: 5px solid rgb(17, 0, 255);
 }
 
-
-
-
 tr{
     border: 5px solid black;
 }
@@ -36,8 +33,6 @@ h1{
     vertical-align: middle;
     color: white;
 }
-
-
 
 
 .container{
@@ -62,4 +57,14 @@ h1{
     color: white;
 }
 
+
+#object{
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    position: absolute;
+    top: 150px;
+    left: 150px;
+    transform: translate(-50%, -50%);
+}
 
