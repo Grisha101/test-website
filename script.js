@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let objects = [];
     let keys = {};
-
+    
     // 🔹 Відслідковування натиснутих клавіш
     document.addEventListener("keydown", (e) => {
         keys[e.key] = true;
@@ -21,17 +21,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         obj.style.width = "50px";
         obj.style.height = "50px";
-        obj.style.backgroundColor = "blue";
+        obj.style.backgroundColor = "yellow";
         obj.style.position = "absolute";
         obj.style.left = "200px";
-        obj.style.top = "200px";
+        obj.style.bottom = "20px";
+        
+        btn.style.display = "none";
 
         body.appendChild(obj);
 
         objects.push({
             el: obj,
             x: 200,
-            y: 200,
+            y: 660,
             speed: 5
         });
 
@@ -58,30 +60,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         body.appendChild(objSpeciale);
 
-        // objects.push({
-        //     el: objSpeciale,
-        //     x: 400,
-        //     y: 400,
-        //     speed: 5
-        // });
+        objects.push({
+            el: objSpeciale,
+            x: 400,
+            y: 400,
+            speed: 5
+        });
     }
 
 
 
-    // btn.addEventListener(keys["r"], createObject);
+    btn.addEventListener("click", createObject);
 
     // 🔹 Рух об'єктів
     function update() {
         objects.forEach(obj => {
 
-            if (keys["w"]) obj.y -= obj.speed;
-            if (keys["s"]) obj.y += obj.speed;
+            // if (keys["w"]) obj.y -= obj.speed;
+            // if (keys["s"]) obj.y += obj.speed;
             if (keys["a"]) obj.x -= obj.speed;
             if (keys["d"]) obj.x += obj.speed;
-            if (keys["q"]) createObjectSpecial();
-                console.log("Key pressed: ", keys);
             if (keys["r"]) createObject();
-                console.log("Key pressed: ", keys);
+            if (keys["q"]) createObjectSpecial();
+            
+
             //  isColliding(obj, objSpeciale) && console.log("Collision!");
 
             obj.el.style.left = obj.x + "px";
