@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    btn.addEventListener("click", createObject);
+    // btn.addEventListener(keys["r"], createObject);
 
     // 🔹 Рух об'єктів
     function update() {
@@ -79,8 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (keys["a"]) obj.x -= obj.speed;
             if (keys["d"]) obj.x += obj.speed;
             if (keys["q"]) createObjectSpecial();
-
-             isColliding(obj, objSpeciale) && console.log("Collision!");
+                console.log("Key pressed: ", keys);
+            if (keys["r"]) createObject();
+                console.log("Key pressed: ", keys);
+            //  isColliding(obj, objSpeciale) && console.log("Collision!");
 
             obj.el.style.left = obj.x + "px";
             obj.el.style.top = obj.y + "px";
