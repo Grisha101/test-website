@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let objects = [];
     let keys = {};
-    let ball = [];
+    let balls = [];
     // 🔹 Відслідковування натиснутих клавіш
     document.addEventListener("keydown", (e) => {
         keys[e.key] = true;
@@ -39,21 +39,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
     function createBall() {
-        const ball = document.createElement("div");
+        const ballEl = document.createElement("div");
 
-        ball.style.width = "10px";
-        ball.style.height = "10px";
-        ball.style.backgroundColor = "cyan";
-        ball.style.position = "absolute";
-        ball.style.left = "600px";
-        ball.style.bottom = "300px";
-        ball.style.borderRadius="100%";
+        ballEl.style.width = "10px";
+        ballEl.style.height = "10px";
+        ballEl.style.backgroundColor = "cyan";
+        ballEl.style.position = "absolute";
+        ballEl.style.left = "600px";
+        ballEl.style.top = "300px";
+        ballEl.style.borderRadius = "100%";
         btn.style.display = "none";
 
-        body.appendChild(ball);
+        body.appendChild(ballEl);
 
-        ball.push({
-            el: ball,
+        balls.push({
+            el: ballEl,
             x: 600,
             y: 300,
             speed: 5
@@ -61,12 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    function isColliding(obj1, obj2) {
-    return !(
-        obj1.x + obj1.width < obj2.x ||
-        obj1.x > obj2.x + obj2.width ||
-        obj1.y + obj1.height < obj2.y ||
-        obj1.y > obj2.y + obj2.height
+    // rerite the function to check collision between ball and objects
+function isColliding(ball, obj) {
+     const ballRect = ball.el.getBoundingClientRect();
+     const objRect = obj.el.getBoundingClientRect();
+   return !(ballRect.right < objRect.left ||
+                ballRect.left > objRect.right ||    
+                ballRect.bottom < objRect.top ||
+                ballRect.top > objRect.bottom
     );
 }
 
@@ -112,15 +114,20 @@ document.addEventListener("DOMContentLoaded", () => {
             obj.el.style.left = obj.x + "px";
             obj.el.style.top = obj.y + "px";
         });
-        ball.forEach(ball => {
-            while (true) {
-                //рух вниз
-                ball.y += ball.speed;
+        balls.forEach(b => {
+        // bounsce ball from the obects
+                objects.forEach(obj => {
+                    
+                    if (isColliding(b, obj)) {
+                        b.speed = -b.speed; // Reverse and reduce speed to simulate bounce
+                        b.y = obj.y - 150; // Position the ball above the object
+                    }
+                });
+            b.speed += 0.9; // Gravity
+            b.y += b.speed;
+            b.el.style.left = b.x + "px";
+            b.el.style.top = b.y + "px";
 
-                //оновлення позиції
-                ball.el.style.left = ball.x + "px";
-                ball.el.style.top = ball.y + "px";
-            }
         });
 
         requestAnimationFrame(update);
