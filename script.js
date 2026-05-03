@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let objects = [];
     let keys = {};
-    
+    let ball = [];
     // 🔹 Відслідковування натиснутих клавіш
     document.addEventListener("keydown", (e) => {
         keys[e.key] = true;
@@ -19,12 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function createObject() {
         const obj = document.createElement("div");
 
-        obj.style.width = "50px";
-        obj.style.height = "50px";
+        obj.style.width = "200px";
+        obj.style.height = "10px";
         obj.style.backgroundColor = "yellow";
         obj.style.position = "absolute";
         obj.style.left = "200px";
-        obj.style.bottom = "20px";
+        obj.style.bottom = "100px";
         
         btn.style.display = "none";
 
@@ -32,8 +32,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         objects.push({
             el: obj,
-            x: 200,
-            y: 660,
+            x: 500,
+            y: 658,
+            speed: 5
+        });
+
+    }
+    function createBall() {
+        const ball = document.createElement("div");
+
+        ball.style.width = "10px";
+        ball.style.height = "10px";
+        ball.style.backgroundColor = "cyan";
+        ball.style.position = "absolute";
+        ball.style.left = "600px";
+        ball.style.bottom = "300px";
+        ball.style.borderRadius="100%";
+        btn.style.display = "none";
+
+        body.appendChild(ball);
+
+        ball.push({
+            el: ball,
+            x: 600,
+            y: 300,
             speed: 5
         });
 
@@ -71,23 +93,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     btn.addEventListener("click", createObject);
-
+    btn.addEventListener("click", createBall);
     // 🔹 Рух об'єктів
     function update() {
         objects.forEach(obj => {
 
             // if (keys["w"]) obj.y -= obj.speed;
             // if (keys["s"]) obj.y += obj.speed;
+                
             if (keys["a"]) obj.x -= obj.speed;
             if (keys["d"]) obj.x += obj.speed;
-            if (keys["r"]) createObject();
-            if (keys["q"]) createObjectSpecial();
+            // if (keys["r"]) createObject();
+            // if (keys["q"]) createObjectSpecial();
             
 
             //  isColliding(obj, objSpeciale) && console.log("Collision!");
-
+        
             obj.el.style.left = obj.x + "px";
             obj.el.style.top = obj.y + "px";
+        });
+        ball.forEach(ball => {
+            while (true) {
+                //рух вниз
+                ball.y += ball.speed;
+
+                //оновлення позиції
+                ball.el.style.left = ball.x + "px";
+                ball.el.style.top = ball.y + "px";
+            }
         });
 
         requestAnimationFrame(update);
