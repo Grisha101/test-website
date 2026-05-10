@@ -109,8 +109,7 @@ function isColliding(ball, obj) {
             // if (keys["q"]) createObjectSpecial();
             
 
-            //  isColliding(obj, objSpeciale) && console.log("Collision!");
-        
+            //  
             obj.el.style.left = obj.x + "px";
             obj.el.style.top = obj.y + "px";
         });
@@ -123,7 +122,7 @@ function isColliding(ball, obj) {
                         b.y = obj.y - 150; // Position the ball above the object
                     }
                 });
-            b.speed += 0.9; // Gravity
+            b.speed += 1.1; // Gravity
             b.y += b.speed;
             b.el.style.left = b.x + "px";
             b.el.style.top = b.y + "px";
