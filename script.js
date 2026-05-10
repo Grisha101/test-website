@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let objects = [];
     let keys = {};
     let balls = [];
+
     // 🔹 Відслідковування натиснутих клавіш
     document.addEventListener("keydown", (e) => {
         keys[e.key] = true;
@@ -23,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
         obj.style.height = "10px";
         obj.style.backgroundColor = "yellow";
         obj.style.position = "absolute";
-        obj.style.left = "200px";
-        obj.style.bottom = "100px";
-        
+        // Use top/left so stored y matches style.top
+        obj.style.left = "500px";
+        obj.style.top = "658px";
         btn.style.display = "none";
 
         body.appendChild(obj);
@@ -56,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
             el: ballEl,
             x: 600,
             y: 300,
-            speed: 5
+            speed: 5,
+            vx: 0 // horizontal velocity
         });
 
     }
@@ -114,18 +116,38 @@ function isColliding(ball, obj) {
             obj.el.style.top = obj.y + "px";
         });
         balls.forEach(b => {
-        // bounsce ball from the obects
+        // bounce ball from the objects with damping
                 objects.forEach(obj => {
-                    
                     if (isColliding(b, obj)) {
-                        b.speed = -b.speed; // Reverse and reduce speed to simulate bounce
-                        b.y = obj.y - 150; // Position the ball above the object
+                        // Only bounce if the ball is moving downward
+                        if (b.speed > 0) {
+                            // Increase vertical bounce (speed boost) and apply damping
+                            b.speed = -Math.abs(b.speed) * 1; // stronger bounce
+                            // Give a horizontal kick on touch
+                            b.vx += (Math.random() - 0.5) * 4; // random -2..2
+                            // Clamp horizontal speed
+                            const maxVx = 9;
+                            if (b.vx > maxVx) b.vx = maxVx;
+                            if (b.vx < -maxVx) b.vx = -maxVx;
+                            // Place ball on top of the object
+                            const ballHeight = parseFloat(b.el.style.height) || 9;
+                            b.y = obj.y - ballHeight - 1;
+                        }
                     }
                 });
-            b.speed += 1.1; // Gravity
+
+
+            // Gravity (accelerate downward)
+            b.speed += 0.5;
             b.y += b.speed;
+            // Horizontal movement and friction
+            b.x += b.vx;
+            b.vx *= 0.999; // slight friction
             b.el.style.left = b.x + "px";
             b.el.style.top = b.y + "px";
+
+
+            console.log(objects)
 
         });
 
