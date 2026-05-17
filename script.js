@@ -121,8 +121,8 @@ function isColliding(obj1, obj2) {
     function update() {
         objects.forEach(platform => {
 
-            // if (keys["w"]) obj.y -= obj.speed;
-            // if (keys["s"]) obj.y += obj.speed;
+            if (keys["w"]) obj.y -= obj.speed;
+            if (keys["s"]) obj.y += obj.speed;
                 
             if (keys["a"]) platform.x -= platform.speed;
             if (keys["d"]) platform.x += platform.speed;
@@ -183,8 +183,8 @@ function isColliding(obj1, obj2) {
             // Gravity (accelerate downward)
             b.speed += 0.04;
             b.y += b.speed;
-            // Horizontal movement and friction
-            b.x += b.vx;
+             // Horizontal movement and friction
+           b.x += b.vx;
             b.vx *= 0.999; // slight friction
             b.el.style.left = b.x + "px";
             b.el.style.top = b.y + "px";
