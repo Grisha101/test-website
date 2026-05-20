@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
         btn.style.display="none";
         body.appendChild(stumbleguy);
         stumbleguys.push({
-            el: stumblewsguy,
+            el: stumbleguy,
             x: 100,
             y: 100,
             speed: 5
@@ -58,18 +58,19 @@ document.addEventListener("DOMContentLoaded", ()=> {
 
         function update() {
             stumbleguys.forEach(stumbleguy => {
-                if (keys["w"]) stumbleguy.y -= stumbleguy.speed ;console.log("w");
-                if (keys["s"]) stumbleguy.y += stumbleguy.speed ;console.log("s");
-                if (keys["a"]) stumbleguy.x -= stumbleguy.speed ;console.log("a");
-                if (keys["d"]) stumbleguy.x += stumbleguy.speed ;console.log("d");
+                if (keys["w"]) { stumbleguy.y -= stumbleguy.speed; console.log("w"); }
+                if (keys["s"]) { stumbleguy.y += stumbleguy.speed; console.log("s"); }
+                if (keys["a"]) { stumbleguy.x -= stumbleguy.speed; console.log("a"); }
+                if (keys["d"]) { stumbleguy.x += stumbleguy.speed; console.log("d"); }
 
                 stumbleguy.el.style.left = stumbleguy.x + "px";
                 stumbleguy.el.style.top = stumbleguy.y + "px";
-                stumbleguy.el.style.right = stumbleguy.x + "px";
-                stumbleguy.el.style.bottom = stumbleguy.y + "px";
             });
+
+            requestAnimationFrame(update);
         }
-        update();
+
+        requestAnimationFrame(update);
 
 
 
