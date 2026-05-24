@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
     });
     function createGuy(){
         const stumbleguy=document.createElement("img");
-        stumbleguy.src="./cfr23f00100239aws3.gif";
+        stumbleguy.src="./pixil-gif-drawing.gif";
         stumbleguy.style.width="500px";
         stumbleguy.style.height="500px";
         stumbleguy.style.position="absolute";
