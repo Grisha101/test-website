@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", ()=> {
         keys[d.key]=false;
     });
     function createGuy(){
-        const stumbleguy=document.createElement("div");
-        stumbleguy.style.width="50px";
-        stumbleguy.style.height="50px";
-        stumbleguy.style.backgroundColor="black";
+        const stumbleguy=document.createElement("img");
+        stumbleguy.src="./cfr23f00100239aws3.gif";
+        stumbleguy.style.width="500px";
+        stumbleguy.style.height="500px";
         stumbleguy.style.position="absolute";
         stumbleguy.style.left="100px";
         stumbleguy.style.top="100px";
