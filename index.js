@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", ()=> {
     });
     function createGuy(){
         const stumbleguy=document.createElement("img");
-        stumbleguy.src="./pixil-gif-drawing.gif(2)";
-        stumbleguy.style.width="500px";
-        stumbleguy.style.height="500px";
+        stumbleguy.src="./pixil-gif-drawing (2).gif";
+        stumbleguy.style.width="50px";
+        stumbleguy.style.height="50px";
         stumbleguy.style.position="absolute";
         stumbleguy.style.left="100px";
         stumbleguy.style.top="100px";
@@ -59,9 +59,10 @@ document.addEventListener("DOMContentLoaded", ()=> {
         function update() {
             stumbleguys.forEach(stumbleguy => {
                 if (keys["w"]) { stumbleguy.y -= stumbleguy.speed; console.log("w"); }
-                if (keys["s"]) { stumbleguy.y += stumbleguy.speed; console.log("s"); }
-                if (keys["a"]) { stumbleguy.x -= stumbleguy.speed; console.log("a"); }
-                if (keys["d"]) { stumbleguy.x += stumbleguy.speed; console.log("d"); }
+                if (keys["s"]) { stumbleguy.y += stumbleguy.speed; console.log("s"),stumbleguy.el.src="./pixil-gif-drawing (9).gif",stumbleguy.el.style.transform="none"; }
+                if (keys["a"]) { stumbleguy.x -= stumbleguy.speed; console.log("a"),stumbleguy.el.src="./pixil-gif-drawing (2).gif",stumbleguy.el.style.transform="rotateY(180deg)"; }                
+                if (keys["d"]) { stumbleguy.x += stumbleguy.speed; console.log("d"),stumbleguy.el.src="./pixil-gif-drawing (2).gif",stumbleguy.el.style.transform="none";}
+                // if (keys["s"]) { console.log("q"),stumbleguy.srcset="./pixil-gif-drawing (9).gif",stumbleguy.el.style.transform="none";}
 
                 stumbleguy.el.style.left = stumbleguy.x + "px";
                 stumbleguy.el.style.top = stumbleguy.y + "px";
