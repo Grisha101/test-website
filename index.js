@@ -1,79 +1,204 @@
-document.addEventListener("DOMContentLoaded", ()=> {
-    const body=document.body;
-    const btn=document.getElementById("myButton");
-    let keys={};
-    let stumbleguys=[];
-        document.addEventListener("keydown", (e) => {
-        keys[e.key] = true;
+document.addEventListener("DOMContentLoaded", () => {
+    const body = document.body;
+    const btn = document.getElementById("myButton");
+    let keys = {};
+    let stumbleguys = [];
+    let labyrinths = [];
+    let wallTopInput = document.getElementById("wallTop");
+    let wallLeftInput = document.getElementById("wallLeft");
+    let wallHeightInput = document.getElementById("wallHeight");
+    let wallWidthInput = document.getElementById("wallWidth");
+    let wallbutton = document.getElementById("wallbutton");
+            // Add this to listen for keyboard inputs
+    document.addEventListener("keydown", (e) => {
+        keys[e.key.toLowerCase()] = true;
     });
 
     document.addEventListener("keyup", (e) => {
-        keys[e.key] = false;
+        keys[e.key.toLowerCase()] = false;
+    });
+    function makeDraggable(element) {
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    element.style.position = 'absolute';
+
+    element.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        offsetX = e.clientX - element.offsetLeft;
+        offsetY = e.clientY - element.offsetTop;
     });
 
-    document.addEventListener("keydown",(w)=>{
-        keys[w.key]=true;
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        element.style.left = `${e.clientX - offsetX}px`;
+        element.style.top = `${e.clientY - offsetY}px`;
     });
-    document.addEventListener("keyup",(w)=>{
-        keys[w.key]=false;
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
     });
-    document.addEventListener("keydown",(s)=>{
-        keys[s.key]=true;
-    });
-    document.addEventListener("keyup",(s)=>{
-        keys[s.key]=false;
-    });
-    document.addEventListener("keydown",(a)=>{
-        keys[a.key]=true;
-    });
-    document.addEventListener("keyup",(a)=>{
-        keys[a.key]=false;
-    });
-    document.addEventListener("keydown",(d)=>{
-        keys[d.key]=true;
-    });
-    document.addEventListener("keyup",(d)=>{
-        keys[d.key]=false;
-    });
-    function createGuy(){
-        const stumbleguy=document.createElement("img");
-        stumbleguy.src="./pixil-gif-drawing (2).gif";
-        stumbleguy.style.width="50px";
-        stumbleguy.style.height="50px";
-        stumbleguy.style.position="absolute";
-        stumbleguy.style.left="100px";
-        stumbleguy.style.top="100px";
-        btn.style.display="none";
+}
+
+    function createGuy() {
+        const stumbleguy = document.createElement("img");
+        stumbleguy.src = "./pixil-gif-drawing (2).gif";
+        stumbleguy.style.width = "30px";
+        stumbleguy.style.height = "30px";
+        stumbleguy.style.position = "absolute";
+        stumbleguy.style.left = "100px";
+        stumbleguy.style.top = "100px";
+        btn.style.display = "none";
         body.appendChild(stumbleguy);
+
         stumbleguys.push({
             el: stumbleguy,
             x: 100,
             y: 100,
             speed: 5
         });
-    
     }
 
-        btn.addEventListener("click",createGuy);
+    // function createLabyrinthwalls(top,left,height,color) {
+    //     const labyrinth = document.createElement("div");
+    //     labyrinth.style.width = "20px";
+    //     labyrinth.style.height = height + "px";
+    //     labyrinth.style.backgroundColor = color;
+    //     labyrinth.style.position = "absolute";
+    //     labyrinth.style.left = left + "px";
+    //     labyrinth.style.top = top + "px";
+    //     body.appendChild(labyrinth);
 
-        function update() {
-            stumbleguys.forEach(stumbleguy => {
-                if (keys["w"]) { stumbleguy.y -= stumbleguy.speed; console.log("w"); }
-                if (keys["s"]) { stumbleguy.y += stumbleguy.speed; console.log("s"),stumbleguy.el.src="./pixil-gif-drawing (9).gif",stumbleguy.el.style.transform="none"; }
-                if (keys["a"]) { stumbleguy.x -= stumbleguy.speed; console.log("a"),stumbleguy.el.src="./pixil-gif-drawing (2).gif",stumbleguy.el.style.transform="rotateY(180deg)"; }                
-                if (keys["d"]) { stumbleguy.x += stumbleguy.speed; console.log("d"),stumbleguy.el.src="./pixil-gif-drawing (2).gif",stumbleguy.el.style.transform="none";}
-                // if (keys["s"]) { console.log("q"),stumbleguy.srcset="./pixil-gif-drawing (9).gif",stumbleguy.el.style.transform="none";}
+    //     labyrinths.push({
+    //         el: labyrinth,
+    //         x: parseInt(labyrinth.style.left, 10),
+    //         y: parseInt(labyrinth.style.top, 10),
+    //         width: 20,
+    //         height: 200
+    //     });
+    // }
 
+    
+    function createLabyrinthFloor(top,left,height,width) {
+        const labyrinth = document.createElement("div");
+        labyrinth.style.width = width + "px";
+        labyrinth.style.height = height + "px";
+        labyrinth.style.backgroundColor = "green";
+        labyrinth.style.position = "absolute";
+        labyrinth.style.left = left + "px";
+        labyrinth.style.top = top + "px";
+        labyrinth.style.className = "wall";
+        
+        body.appendChild(labyrinth);
+        makeDraggable(document.querySelector(".wall"));
+        labyrinths.push({
+            el: labyrinth,
+            x: parseInt(labyrinth.style.left, 10),
+            y: parseInt(labyrinth.style.top, 10),
+            width: parseInt(labyrinth.style.width, 10),
+            height: parseInt(labyrinth.style.height, 10)
+        });
+    } 
+
+
+    function isColliding(stumbleguy, labyrinthWall) {
+        const stumbleRect = stumbleguy.el.getBoundingClientRect();
+        const labyrinthWallRect = labyrinthWall.el.getBoundingClientRect();
+        return !(
+            stumbleRect.right < labyrinthWallRect.left ||
+            stumbleRect.left > labyrinthWallRect.right ||
+            stumbleRect.bottom < labyrinthWallRect.top ||
+            stumbleRect.top > labyrinthWallRect.bottom
+        );
+    }
+
+    btn.addEventListener("click", () => {createLabyrinthFloor(200,210,10,100)
+        console.log("button clicked");
+        createLabyrinthFloor(140,210,10,150)
+        createLabyrinthFloor(140,360,120,10)
+        createGuy()
+        createLabyrinthFloor(140,360,120,10)});
+    wallbutton.addEventListener("click", () => {
+        const wallTop = parseInt(wallTopInput.value);
+        const wallLeft = parseInt(wallLeftInput.value);
+        const wallHeight = parseInt(wallHeightInput.value);
+        const wallWidth = parseInt(wallWidthInput.value);
+        createLabyrinthFloor(wallTop, wallLeft, wallHeight, wallWidth);
+    });
+
+    function update() {
+        stumbleguys.forEach(stumbleguy => {
+      
+            if (keys["s"]) { 
+                console.log("s");
+                stumbleguy.el.src = "./pixil-gif-drawing (9).gif";
+                stumbleguy.el.style.transform = "none"; 
+            }
+            if (keys["a"]) { 
+                console.log("a");
+                stumbleguy.el.src = "./pixil-gif-drawing (2).gif";
+                stumbleguy.el.style.transform = "rotateY(180deg)"; 
+            }                
+            if (keys["d"]) { 
+                console.log("d");
+                stumbleguy.el.src = "./pixil-gif-drawing (2).gif";
+                stumbleguy.el.style.transform = "none";
+            }
+            if (keys["w"]) {
+                console.log("w");
+            }
+
+        
+            const oldX = stumbleguy.x;
+
+            if (keys["a"]) stumbleguy.x -= stumbleguy.speed;
+            if (keys["d"]) stumbleguy.x += stumbleguy.speed;
+
+
+            stumbleguy.el.style.left = stumbleguy.x + "px";
+
+            let collidedX = false;
+            for (let labyrinthWall of labyrinths) {
+                if (isColliding(stumbleguy, labyrinthWall)) {
+                    collidedX = true;
+                    break;
+                }
+            }
+          
+            if (collidedX) {
+                stumbleguy.x = oldX;
                 stumbleguy.el.style.left = stumbleguy.x + "px";
-                stumbleguy.el.style.top = stumbleguy.y + "px";
-            });
+            }
 
-            requestAnimationFrame(update);
-        }
+
+            const oldY = stumbleguy.y; 
+
+            if (keys["w"]) stumbleguy.y -= stumbleguy.speed;
+            if (keys["s"]) stumbleguy.y += stumbleguy.speed;
+
+
+            stumbleguy.el.style.top = stumbleguy.y + "px";
+
+
+            let collidedY = false;
+            for (let labyrinthWall of labyrinths) {
+                if (isColliding(stumbleguy, labyrinthWall)) {
+                    collidedY = true;
+                    break;
+                }
+            }
+
+            if (collidedY) {
+                stumbleguy.y = oldY;
+                stumbleguy.el.style.top = stumbleguy.y + "px";
+            }
+        });
 
         requestAnimationFrame(update);
+    }
 
-
-
-
+    requestAnimationFrame(update);
 });
