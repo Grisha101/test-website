@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const body = document.body;
     const btn = document.getElementById("myButton");
     const wallbutton = document.getElementById("wallbutton");
-    const deleteButton = document.getElementById("deleteButton");
+    const deleteButton = document.getElementById("deleteButton"); // Uncommented so it's defined
 
     const wallContainer = document.getElementById("wallContainer");
 
@@ -215,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const wallHeightInput = document.getElementById("wallHeight");
     const wallWidthInput = document.getElementById("wallWidth");
 
+    let containers = [];
     let keys = {};
     let stumbleguys = [];
     let labyrinths = [];
@@ -278,7 +279,24 @@ document.addEventListener("DOMContentLoaded", () => {
             speed: 5
         });
     }
-
+    function createContainer() {
+        const container = document.createElement("div");
+        container.style.width = "100px";
+        container.style.height = "200px";
+        container.style.backgroundColor = "rgba(0, 0, 255, 0.5)";
+        container.style.position = "absolute";
+        container.style.right = "300px";
+        container.style.top = "10px";
+        container.style.zIndex = "5";
+        body.appendChild(container);
+        containers.push({
+            el: container,
+            x: 300,
+            y: 300,
+            width: 100,
+            height: 200
+        });
+    }
     // CREATE LABYRINTH WALLS
     function createLabyrinthFloor(top, left, height, width) {
         const labyrinth = document.createElement("div");
@@ -305,22 +323,11 @@ document.addEventListener("DOMContentLoaded", () => {
             height: height
         });
     } 
-    function deleteLabyrinthWall(wallElement, wallcontainer) {
-        const wallRect = wallElement.getBoundingClientRect();
-        const wallContainerRect = wallcontainer.getBoundingClientRect();
-        return !(
-            wallRect.right < wallContainerRect.left ||
-            wallRect.left > wallContainerRect.right ||
-            wallRect.bottom < wallContainerRect.top ||
-            wallRect.top > wallContainerRect.bottom
-        );
-    }
 
     // COLLISION DETECTION ENGINE
     function isColliding(stumbleguy, labyrinthWall) {
         const stumbleRect = stumbleguy.el.getBoundingClientRect();
         const labyrinthWallRect = labyrinthWall.el.getBoundingClientRect();
-        
         return !(
             stumbleRect.right < labyrinthWallRect.left ||
             stumbleRect.left > labyrinthWallRect.right ||
@@ -345,18 +352,38 @@ document.addEventListener("DOMContentLoaded", () => {
         createLabyrinthFloor(140, 210, 10, 150);
         createLabyrinthFloor(140, 360, 120, 10);
         createGuy();
+        createContainer();
     });
-    deleteButton.addEventListener("click", () => {
-        if (deleteLabyrinthWall()) {
 
-        }
-    });
     wallbutton.addEventListener("click", () => {
         const wallTop = parseInt(wallTopInput.value, 10) || 0;
         const wallLeft = parseInt(wallLeftInput.value, 10) || 0;
         const wallHeight = parseInt(wallHeightInput.value, 10) || 20;
         const wallWidth = parseInt(wallWidthInput.value, 10) || 100;
         createLabyrinthFloor(wallTop, wallLeft, wallHeight, wallWidth);
+    });
+
+    // REFACTORED: Finds and deletes the wall currently touching the character
+    function deleteCollidingWall() {
+        const container1 = containers[0]; 
+
+        // Find the wall that the player is touching
+        const wallToDelete = labyrinths.find(wall => isColliding(container1, wall));
+
+        if (wallToDelete) {
+            wallToDelete.el.remove(); // Remove from DOM screen
+            labyrinths = labyrinths.filter(wall => wall !== wallToDelete); // Remove from Array
+            console.log("Wall deleted successfully.");
+            return true;
+        }
+        
+        console.log("no wall to delete.");
+        return false;
+    }
+
+    // Fixed click listener targeting the refactored delete function
+    deleteButton.addEventListener("click", () => {
+        deleteCollidingWall();
     });
 
     // GAME ENGINE LOOP
@@ -418,7 +445,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 stumbleguy.el.style.top = stumbleguy.y + "px";
             }
         });
-        
 
         requestAnimationFrame(update);
     }
