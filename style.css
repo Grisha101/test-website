@@ -20,6 +20,31 @@ body {
     background-color: white;
     color: black;
 }
+#deleteButton {
+    display: inline;
+    background-color:rgb(255, 0, 0);
+    color: rgb(0, 0, 0);
+    border: 8px solid rgb(255, 106, 0);
+    padding: 10px 20px;
+    font-size: 10px;
+    cursor: pointer;
+    /* znahodzhennya */
+    position:absolute;
+    top:19%;
+    left:35%;
+    transform: translate(-50%,-50%)
+}
+#deleteButton:hover {
+    border: 3px solid rgb(255, 0, 0);
+    background-color: rgb(255, 115, 0);
+    color: rgb(0, 0, 0);
+}
+#wallContainer {
+    position: relative;
+    background-color: rgb(213, 255, 4);
+    width: 30%;
+    height: 100%;
+}
 /* #object {
     width:100px;
     height:50px;

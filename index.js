@@ -206,7 +206,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const body = document.body;
     const btn = document.getElementById("myButton");
     const wallbutton = document.getElementById("wallbutton");
-    
+    const deleteButton = document.getElementById("deleteButton");
+
+    const wallContainer = document.getElementById("wallContainer");
+
     const wallTopInput = document.getElementById("wallTop");
     const wallLeftInput = document.getElementById("wallLeft");
     const wallHeightInput = document.getElementById("wallHeight");
@@ -302,6 +305,16 @@ document.addEventListener("DOMContentLoaded", () => {
             height: height
         });
     } 
+    function deleteLabyrinthWall(wallElement, wallcontainer) {
+        const wallRect = wallElement.getBoundingClientRect();
+        const wallContainerRect = wallcontainer.getBoundingClientRect();
+        return !(
+            wallRect.right < wallContainerRect.left ||
+            wallRect.left > wallContainerRect.right ||
+            wallRect.bottom < wallContainerRect.top ||
+            wallRect.top > wallContainerRect.bottom
+        );
+    }
 
     // COLLISION DETECTION ENGINE
     function isColliding(stumbleguy, labyrinthWall) {
@@ -333,7 +346,11 @@ document.addEventListener("DOMContentLoaded", () => {
         createLabyrinthFloor(140, 360, 120, 10);
         createGuy();
     });
+    deleteButton.addEventListener("click", () => {
+        if (deleteLabyrinthWall()) {
 
+        }
+    });
     wallbutton.addEventListener("click", () => {
         const wallTop = parseInt(wallTopInput.value, 10) || 0;
         const wallLeft = parseInt(wallLeftInput.value, 10) || 0;
@@ -401,6 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 stumbleguy.el.style.top = stumbleguy.y + "px";
             }
         });
+        
 
         requestAnimationFrame(update);
     }
