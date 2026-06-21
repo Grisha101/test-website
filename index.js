@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const wallHeightInput = document.getElementById("wallHeight");
     const wallWidthInput = document.getElementById("wallWidth");
 
+    const lightSbtn = document.getElementById("lightSwitch");
+
+    
     let containers = [];
     let keys = {};
     let stumbleguys = [];
@@ -23,18 +26,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const labirynth = document.getElementById("labyrinth");
 labirynth.style.position = "absolute";
-labirynth.style.top = "20%";
-labirynth.style.left = "5%";
-labirynth.style.width = "700px";
-labirynth.style.height = "500px";
-labirynth.style.background = "rgba(0, 0, 0, 0.9) 0%";
+labirynth.style.top = "0px";
+labirynth.style.left = "0px";
+labirynth.style.width = "100%";
+labirynth.style.height = "100%";
+
+labirynth.style.background =
+`radial-gradient(
+circle 100px at 100px 100px,
+transparent 0%,
+rgba(255, 255, 255, 0) 100%,
+rgba(255, 255, 255, 0) 100%
+)`;
+
+
+let lightStatus = 1;
+
+labirynth.style.background = `
+radial-gradient(
+circle 120px at 200px 200px,
+transparent 0%,
+rgba(255, 255, 255, 0) 100%,
+rgba(255, 255, 255, 0) 100%
+)
+`;
+
+    lightSbtn.addEventListener("click", () => {        
+        if (labirynth.style.background.includes("rgb(0, 0, 0)")) { //if the light is off 
+            lightStatus = 1;
+            labirynth.style.background = `
+            transparent 0%,
+            rgb(255, 255, 255) 100%,
+            rgb(255, 255, 255) 100%
+            )
+            `;
+        } else {
+            lightStatus = 0;
+            labirynth.style.background = `
+            radial-gradient(
+            transparent 0%,
+            rgb(0, 0, 0) 100%,
+            rgb(0, 0, 0) 100%
+            )
+            `;
+        }
+
+    });
+
+
 labirynth.style.pointerEvents = "none"; // Allow clicks to pass through 
 labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
-
-
-
-
-
 
 
     // DRAG AND DROP FUNCTIONALITY
@@ -82,17 +123,17 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         stumbleguy.style.width = "30px";
         stumbleguy.style.height = "30px";
         stumbleguy.style.position = "absolute";
-        stumbleguy.style.left = "100px";
-        stumbleguy.style.top = "100px";
-        stumbleguy.style.zIndex = "10";
+        stumbleguy.style.left = "220px";
+        stumbleguy.style.top = "220px";
+        stumbleguy.style.zIndex = "99999";
         // stumbleguy.style.background = "rgba(255, 255, 255, 0.5)"; // Smooth sprite changes
         btn.style.display = "none";
         body.appendChild(stumbleguy);
 
         stumbleguys.push({
             el: stumbleguy,
-            x: 100,
-            y: 100,
+            x: 220,
+            y: 220,
             speed: 5
         });
     }
@@ -114,6 +155,10 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
             height: 200
         });
     }
+
+
+
+
     // CREATE LABYRINTH WALLS
     function createLabyrinthFloor(top, left, height, width) {
         const labyrinth = document.createElement("div");
@@ -203,9 +248,44 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         deleteCollidingWall();
     });
 
+
+
     // GAME ENGINE LOOP
     function update() {
         stumbleguys.forEach(stumbleguy => {
+
+            const rect = labirynth.getBoundingClientRect();
+
+            const playerCenterX =
+            stumbleguy.x - rect.left + 15;
+
+            const playerCenterY =
+            stumbleguy.y - rect.top + 15;
+
+
+
+            if (lightStatus==1) {
+            labirynth.style.background = `
+            radial-gradient(
+            circle 120px at ${playerCenterX}px ${playerCenterY}px,
+            transparent 0%,
+            rgba(255, 255, 255, 0) 100%,
+            rgba(255, 255, 255, 0) 100%
+            )
+            `;
+
+            }
+            else {
+            labirynth.style.background = `
+            radial-gradient(
+            circle 120px at ${playerCenterX}px ${playerCenterY}px,
+            transparent 0%,
+            rgb(0, 0, 0) 100%,
+            rgb(0, 0, 0) 100%
+            )
+            `;
+            }
+
             // Visual Sprite and Transform Updates
             if (keys["s"]) { 
                 stumbleguy.el.src = "./pixil-gif-drawing (9).gif";
