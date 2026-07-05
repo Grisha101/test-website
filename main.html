@@ -14,27 +14,46 @@
 <body>
 
     <labirynth id="labyrinth"> 
-    
+
     </labirynth>
 
 
     <div class="container">
         <h1>
-            don't be lazy and make a labyrinth
+            play fun
         </h1>
+            <!-- The hidden audio element (no 'controls' attribute makes it invisible) -->
+<audio id="bg-music" loop>
+    <source src="Pufino - Enlivening (freetouse.com).mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<script>
+    // Modern browsers block autoplay until a user interacts with the page
+    window.addEventListener('click', () => {
+        const audio = document.getElementById('bg-music');
+        
+        // Only trigger play if it isn't already playing
+        if (audio.paused) {
+            audio.play().catch(error => {
+                console.log("Audio playback failed:", error);
+            });
+        }
+    }, { once: true }); // { once: true } ensures this event listener only runs on the first click
+</script>
         <!-- <h1>Welcome to My Webpage</h1> -->
             <!-- <img src="./pixil-gif-drawing (9).gif" alt="Image" class="my-image"> -->
-            <!-- <input type="text" id="wallTop" placeholder="Enter wall top position">
-            <input type="text" id="wallLeft" placeholder="Enter wall left position"> -->
+            <input type="text" id="wallTop" placeholder="Enter wall top position">
+            <input type="text" id="wallLeft" placeholder="Enter wall left position">
             <input type="text" id="wallHeight" placeholder="Enter wall height">
             <input type="text" id="wallWidth" placeholder="Enter wall width">
-
-
+            <img id="start_background" src="./Screenshot 2026-07-01 194018.png" alt="Object">
+            <img id="cobblestone_bricks" src="./Screenshot 2026-07-01 193945.png" alt="Object">
+            <button id="switchModeButton">Switch mode</button>
             <button id="lightSwitch">Toggle Light</button>
-            <button id="myButton">press to start</button> 
+            <button id="myButton" class="slide-in-elliptic-top-fwd"> press to start</button> 
             <button id="wallbutton">create a cool wall</button>
             <button id="deleteButton">delete the wall</button>
-            <!-- <div id="wallContainer"> drag wall here to delete </div> -->
            <!-- <img id="object" src="./pixil-gif-drawing (9).gif" alt="Object"> -->
     </div>
         

@@ -1,81 +1,53 @@
 
-
 document.addEventListener("DOMContentLoaded", () => {
     const body = document.body;
     const btn = document.getElementById("myButton");
     const wallbutton = document.getElementById("wallbutton");
-    const deleteButton = document.getElementById("deleteButton"); // Uncommented so it's defined
-
-    const wallContainer = document.getElementById("wallContainer");
-
+    const deleteButton = document.getElementById("deleteButton"); 
+    const switchModeButton = document.getElementById("switchModeButton"); 
     const wallTopInput = document.getElementById("wallTop");
     const wallLeftInput = document.getElementById("wallLeft");
     const wallHeightInput = document.getElementById("wallHeight");
     const wallWidthInput = document.getElementById("wallWidth");
-
     const lightSbtn = document.getElementById("lightSwitch");
-
-    
+    const startbackground = document.getElementById("start_background");
+    const cobblestonebricks = document.getElementById("cobblestone_bricks");
     let containers = [];
     let keys = {};
     let stumbleguys = [];
     let labyrinths = [];
+    
+    // Global flag to track if we can drag walls or not
+    let isEditMode = false; 
             
+    // functionality of the light 
+    const labirynth = document.getElementById("labyrinth");
+    labirynth.style.position = "absolute";
+    labirynth.style.top = "0px";
+    labirynth.style.left = "0px";
+    labirynth.style.width = "100%";
+    labirynth.style.height = "100%";
 
-// functionality of the light 
+    let lightStatus = 1;
 
-const labirynth = document.getElementById("labyrinth");
-labirynth.style.position = "absolute";
-labirynth.style.top = "0px";
-labirynth.style.left = "0px";
-labirynth.style.width = "100%";
-labirynth.style.height = "100%";
-
-labirynth.style.background =
-`radial-gradient(
-circle 100px at 100px 100px,
-transparent 0%,
-rgba(255, 255, 255, 0) 100%,
-rgba(255, 255, 255, 0) 100%
-)`;
-
-
-let lightStatus = 1;
-
-labirynth.style.background = `
-radial-gradient(
-circle 120px at 200px 200px,
-transparent 0%,
-rgba(255, 255, 255, 0) 100%,
-rgba(255, 255, 255, 0) 100%
-)
-`;
+    labirynth.style.background = `
+    radial-gradient(
+    circle 120px at 200px 200px,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 100%
+    )
+    `;
 
     lightSbtn.addEventListener("click", () => {        
-        if (labirynth.style.background.includes("rgb(0, 0, 0)")) { //if the light is off 
+        if (lightStatus === 0) { 
             lightStatus = 1;
-            labirynth.style.background = `
-            transparent 0%,
-            rgb(255, 255, 255) 100%,
-            rgb(255, 255, 255) 100%
-            )
-            `;
         } else {
             lightStatus = 0;
-            labirynth.style.background = `
-            radial-gradient(
-            transparent 0%,
-            rgb(0, 0, 0) 100%,
-            rgb(0, 0, 0) 100%
-            )
-            `;
         }
-
     });
 
-
-labirynth.style.pointerEvents = "none"; // Allow clicks to pass through 
-labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
+    labirynth.style.pointerEvents = "none"; 
+    labirynth.style.zIndex = "100"; 
 
 
     // DRAG AND DROP FUNCTIONALITY
@@ -85,9 +57,11 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         let offsetY = 0;
 
         element.style.position = 'absolute';
-        element.style.cursor = 'grab';
+        element.style.cursor = 'default'; // Default to normal cursor
 
         element.addEventListener('mousedown', (e) => {
+            if (!isEditMode) return; // REJECT dragging if edit mode is off
+            
             isDragging = true;
             element.style.cursor = 'grabbing';
             offsetX = e.clientX - element.offsetLeft;
@@ -95,7 +69,7 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
+            if (!isDragging || !isEditMode) return;
             element.style.left = `${e.clientX - offsetX}px`;
             element.style.top = `${e.clientY - offsetY}px`;
         });
@@ -103,10 +77,9 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
-                element.style.cursor = 'grab';
+                element.style.cursor = isEditMode ? 'grab' : 'default';
                 
                 // Update the coordinates in our labyrinths array 
-                // so character collision matches the wall's new position
                 const foundWall = labyrinths.find(w => w.el === element);
                 if (foundWall) {
                     foundWall.x = parseInt(element.style.left, 10);
@@ -115,35 +88,36 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
             }
         });
     }
-
+    
     // CREATE CHARACTER
     function createGuy() {
         const stumbleguy = document.createElement("img");
-        stumbleguy.src = "./pixil-gif-drawing (2).gif"; // Ensure this image path is correct!
+        stumbleguy.src = "./pixil-gif-drawing (2).gif"; 
         stumbleguy.style.width = "30px";
         stumbleguy.style.height = "30px";
         stumbleguy.style.position = "absolute";
-        stumbleguy.style.left = "220px";
-        stumbleguy.style.top = "220px";
+        stumbleguy.style.left = "100px"; // Изменено, чтобы не застревал в стене
+        stumbleguy.style.top = "100px";  // Изменено, чтобы не застревал в стене
         stumbleguy.style.zIndex = "99999";
-        // stumbleguy.style.background = "rgba(255, 255, 255, 0.5)"; // Smooth sprite changes
         btn.style.display = "none";
         body.appendChild(stumbleguy);
 
         stumbleguys.push({
             el: stumbleguy,
-            x: 220,
-            y: 220,
+            x: 100,
+            y: 100,
             speed: 5
         });
     }
+
+    const container = document.createElement("div");
     function createContainer() {
-        const container = document.createElement("div");
+        container.style.display = "inline";
         container.style.width = "100px";
         container.style.height = "200px";
         container.style.backgroundColor = "rgba(0, 0, 255, 0.5)";
         container.style.position = "absolute";
-        container.style.right = "300px";
+        container.style.right = "250px";
         container.style.top = "10px";
         container.style.zIndex = "5";
         body.appendChild(container);
@@ -156,29 +130,24 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         });
     }
 
-
-
-
     // CREATE LABYRINTH WALLS
     function createLabyrinthFloor(top, left, height, width) {
-        const labyrinth = document.createElement("div");
-        labyrinth.style.width = width + "px";
-        labyrinth.style.height = height + "px";
-        labyrinth.style.backgroundColor = "green";
-        labyrinth.style.position = "absolute";
-        labyrinth.style.left = left + "px";
-        labyrinth.style.top = top + "px";
+        const labyrinthWall = document.createElement("div");
+        labyrinthWall.style.width = width + "px";
+        labyrinthWall.style.height = height + "px";
+        labyrinthWall.style.backgroundColor = "green";
+        labyrinthWall.style.position = "absolute";
+        labyrinthWall.style.left = left + "px";
+        labyrinthWall.style.top = top + "px";
+        labyrinthWall.className = "wall"; 
         
-        // Correctly set class name
-        labyrinth.className = "wall"; 
-        
-        body.appendChild(labyrinth);
+        body.appendChild(labyrinthWall);
 
-        // Turn on dragging capabilities for this specific wall element
-        makeDraggable(labyrinth);
+        // FIX: Explicitly bind the dragging capabilities to this new wall!
+        makeDraggable(labyrinthWall);
 
         labyrinths.push({
-            el: labyrinth,
+            el: labyrinthWall,
             x: left,
             y: top,
             width: width,
@@ -186,7 +155,6 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         });
     } 
 
-    // COLLISION DETECTION ENGINE
     function isColliding(stumbleguy, labyrinthWall) {
         const stumbleRect = stumbleguy.el.getBoundingClientRect();
         const labyrinthWallRect = labyrinthWall.el.getBoundingClientRect();
@@ -209,7 +177,7 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
 
     // BUTTON EVENT LISTENERS
     btn.addEventListener("click", () => {
-        console.log("Start button clicked");
+        // Базовый спавн при старте
         createLabyrinthFloor(200, 210, 10, 100);
         createLabyrinthFloor(140, 210, 10, 150);
         createLabyrinthFloor(140, 360, 120, 10);
@@ -217,6 +185,45 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         createContainer();
     });
 
+    // MODE SWITCHER VISIBILITY AND FLAG TOGGLE
+    switchModeButton.addEventListener("click", () => {
+        isEditMode = !isEditMode; // Toggle logic
+        
+        if (!isEditMode) {
+            wallTopInput.style.display = "none";
+            wallLeftInput.style.display = "none";
+            wallHeightInput.style.display = "none";
+            wallWidthInput.style.display = "none";
+            wallbutton.style.display = "none";
+            deleteButton.style.display = "none";
+            container.style.display = "none";
+            lightSbtn.style.display = "none";
+            
+            // Revert cursors to standard behavior
+            labyrinths.forEach(wall => wall.el.style.cursor = 'default');
+
+            // --- ОЧИСТКА СТАРЫХ СТЕН И ПОСТРОЙКА БОЛЬШОГО ЛАБИРИНТА ---
+            labyrinths.forEach(wall => wall.el.remove());
+            labyrinths = []; 
+
+            // Строим огромный лабиринт напрямую через функцию
+            buildHugeMaze();
+
+        } else {
+            wallTopInput.style.display = "inline";
+            wallLeftInput.style.display = "inline";
+            wallHeightInput.style.display = "inline";
+            wallWidthInput.style.display = "inline";
+            wallbutton.style.display = "inline";
+            deleteButton.style.display = "inline";
+            container.style.display = "inline";
+            lightSbtn.style.display = "inline";
+            
+            // Show grab handles indicating they can be dragged
+            labyrinths.forEach(wall => wall.el.style.cursor = 'grab');
+        }
+    });
+    
     wallbutton.addEventListener("click", () => {
         const wallTop = parseInt(wallTopInput.value, 10) || 0;
         const wallLeft = parseInt(wallLeftInput.value, 10) || 0;
@@ -225,68 +232,56 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         createLabyrinthFloor(wallTop, wallLeft, wallHeight, wallWidth);
     });
 
-    // REFACTORED: Finds and deletes the wall currently touching the character
     function deleteCollidingWall() {
         const container1 = containers[0]; 
+        if (!container1) return;
 
-        // Find the wall that the player is touching
         const wallToDelete = labyrinths.find(wall => isColliding(container1, wall));
 
         if (wallToDelete) {
-            wallToDelete.el.remove(); // Remove from DOM screen
-            labyrinths = labyrinths.filter(wall => wall !== wallToDelete); // Remove from Array
+            wallToDelete.el.remove(); 
+            labyrinths = labyrinths.filter(wall => wall !== wallToDelete); 
             console.log("Wall deleted successfully.");
             return true;
         }
-        
         console.log("no wall to delete.");
         return false;
     }
 
-    // Fixed click listener targeting the refactored delete function
     deleteButton.addEventListener("click", () => {
         deleteCollidingWall();
     });
 
-
-
     // GAME ENGINE LOOP
     function update() {
         stumbleguys.forEach(stumbleguy => {
-
             const rect = labirynth.getBoundingClientRect();
+            const playerCenterX = stumbleguy.x - rect.left + 15;
+            const playerCenterY = stumbleguy.y - rect.top + 15;
 
-            const playerCenterX =
-            stumbleguy.x - rect.left + 15;
-
-            const playerCenterY =
-            stumbleguy.y - rect.top + 15;
-
-
-
-            if (lightStatus==1) {
-            labirynth.style.background = `
-            radial-gradient(
-            circle 120px at ${playerCenterX}px ${playerCenterY}px,
-            transparent 0%,
-            rgba(255, 255, 255, 0) 100%,
-            rgba(255, 255, 255, 0) 100%
-            )
-            `;
-
-            }
-            else {
-            labirynth.style.background = `
-            radial-gradient(
-            circle 120px at ${playerCenterX}px ${playerCenterY}px,
-            transparent 0%,
-            rgb(0, 0, 0) 100%,
-            rgb(0, 0, 0) 100%
-            )
-            `;
+            if (lightStatus === 1) {
+                labirynth.style.background = `
+                radial-gradient(
+                circle 120px at ${playerCenterX}px ${playerCenterY}px,
+                transparent 0%,
+                rgba(255, 255, 255, 0) 100%
+                )
+                `;
+                cobblestonebricks.style.display = "none";
+                startbackground.style.display = "inline";
+            } else {
+                labirynth.style.background = `
+                radial-gradient(
+                circle 120px at ${playerCenterX}px ${playerCenterY}px,
+                transparent 0%,
+                rgb(0, 0, 0) 100%
+                )
+                `;
+                cobblestonebricks.style.display = "inline ";
+                startbackground.style.display = "none";
             }
 
-            // Visual Sprite and Transform Updates
+            // Sprite Animations
             if (keys["s"]) { 
                 stumbleguy.el.src = "./pixil-gif-drawing (9).gif";
                 stumbleguy.el.style.transform = "none"; 
@@ -300,12 +295,10 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
                 stumbleguy.el.style.transform = "none";
             }
 
-            // --- Horizontal Movement & Collision ---
+            // Horizontal Movement
             const oldX = stumbleguy.x;
-
             if (keys["a"]) stumbleguy.x -= stumbleguy.speed;
             if (keys["d"]) stumbleguy.x += stumbleguy.speed;
-
             stumbleguy.el.style.left = stumbleguy.x + "px";
 
             let collidedX = false;
@@ -321,12 +314,10 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
                 stumbleguy.el.style.left = stumbleguy.x + "px";
             }
 
-            // --- Vertical Movement & Collision ---
+            // Vertical Movement
             const oldY = stumbleguy.y; 
-
             if (keys["w"]) stumbleguy.y -= stumbleguy.speed;
             if (keys["s"]) stumbleguy.y += stumbleguy.speed;
-
             stumbleguy.el.style.top = stumbleguy.y + "px";
 
             let collidedY = false;
@@ -346,6 +337,5 @@ labirynth.style.zIndex = "100"; // Ensure it stays on top of other elements
         requestAnimationFrame(update);
     }
 
-    // Start the game loop
     requestAnimationFrame(update);
 });
