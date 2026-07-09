@@ -10,23 +10,89 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.24/dist/sweetalert2.min.css" rel="stylesheet"> -->
 </head>
 
-
 <body>
+
+    <button id = "signup">SIGN UP</button>
 
     <labirynth id="labyrinth"> 
 
     </labirynth>
 
-
     <div class="container">
-        <h1>
-            play fun
-        </h1>
+        
             <!-- The hidden audio element (no 'controls' attribute makes it invisible) -->
 <audio id="bg-music" loop>
     <source src="Pufino - Enlivening (freetouse.com).mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
+<script>
+var audio = document.getElementById("bg-music");
+audio.volume = 0
+</script>
+
+
+<script type="module">
+
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app-check.js";
+    import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithRedirect,
+    getRedirectResult,
+    signOut,
+    onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+    // Import the functions you need from the SDKs you need
+    // import { initializeApp } from "firebase/app";
+    // import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+    apiKey: "AIzaSyBgHw7u3l-pgemzNWi8K7bpHDNwttqdviU",
+    authDomain: "labi-83656.firebaseapp.com",
+    projectId: "labi-83656",
+    storageBucket: "labi-83656.firebasestorage.app",
+    messagingSenderId: "859640141736",
+    appId: "1:859640141736:web:74610e01ca7035422aef9d"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth(app);
+
+    async function signInWithGoogle() {
+        try {
+            await signInWithRedirect(auth, provider);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function checkRedirectResult() {
+        try {
+            const result = await getRedirectResult(auth);
+            if (result && result.user) {
+                console.log(result.user);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const sign = document.getElementById("signup");
+    sign.addEventListener("click", signInWithGoogle);
+
+    checkRedirectResult();
+
+</script>
+
 
 <script>
     // Modern browsers block autoplay until a user interacts with the page

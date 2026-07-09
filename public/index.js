@@ -12,10 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightSbtn = document.getElementById("lightSwitch");
     const startbackground = document.getElementById("start_background");
     const cobblestonebricks = document.getElementById("cobblestone_bricks");
+
     let containers = [];
     let keys = {};
     let stumbleguys = [];
     let labyrinths = [];
+    
     
     // Global flag to track if we can drag walls or not
     let isEditMode = false; 
