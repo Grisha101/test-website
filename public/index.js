@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightSbtn = document.getElementById("lightSwitch");
     const startbackground = document.getElementById("start_background");
     const cobblestonebricks = document.getElementById("cobblestone_bricks");
+    const settingsButton = document.getElementById("settingsButton");
+
     let containers = [];
     let keys = {};
     let stumbleguys = [];
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     
     // Global flag to track if we can drag walls or not
-    let isEditMode = true;
+    let isEditMode = false;
             
     // functionality of the light 
     const labirynth = document.getElementById("labyrinth");
@@ -50,6 +52,15 @@ document.addEventListener("DOMContentLoaded", () => {
     labirynth.style.pointerEvents = "none"; 
     labirynth.style.zIndex = "100"; 
 
+
+    settingsButton.addEventListener("click", () => {
+        const settingsDiv = document.getElementById("settings");
+        if (settingsDiv.style.display === "none" || settingsDiv.style.display === "") {
+            settingsDiv.style.display = "block";
+        } else {
+            settingsDiv.style.display = "none";
+        }
+    });
 
     // DRAG AND DROP FUNCTIONALITY
     function makeDraggable(element) {
@@ -122,16 +133,16 @@ document.addEventListener("DOMContentLoaded", () => {
         container.style.display = "inline";
         container.style.width = "100px";
         container.style.height = "50px";
-        container.style.backgroundColor = "rgba(0, 0, 255, 0.5)";
+        container.style.backgroundColor = "rgb(253, 72, 0)";
         container.style.position = "absolute";
         container.style.right = "250px";
         container.style.top = "100px";
-        container.style.zIndex = "5";
+        container.style.zIndex = "1";
         body.appendChild(container);
         containers.push({
             el: container,
-            x: 300,
-            y: 300,
+            x: 400,
+            y: 400,
             width: 100,
             height: 50
         });
@@ -196,31 +207,32 @@ VANISHMAGIC("none");
 
     // BUTTON EVENT LISTENERS
     btn.addEventListener("click", () => {
-        // Базовый спавн при старте
+        // Базовый спавн при старті
         createLabyrinthFloor(200, 210, 10, 100);
         createLabyrinthFloor(140, 210, 10, 150);
         createLabyrinthFloor(140, 360, 120, 10);
         createGuy();
-        createContainer();
+        
     });
-
+        
     // MODE SWITCHER VISIBILITY AND FLAG TOGGLE
     switchModeButton.addEventListener("click", () => {
         isEditMode = !isEditMode; // Toggle logic
         
         if (isEditMode) {
-            VANISHMAGIC("none");
+            VANISHMAGIC("inline");
              cobblestonebricks.style.display = "inline";
             startbackground.style.display = "none";
-            
+            createContainer();
+
             // Revert cursors to standard behavior
             labyrinths.forEach(wall => wall.el.style.cursor = 'default');
  
 
         } else {
-            VANISHMAGIC("inline");
-            cobblestonebricks.style.display = "none";
-            startbackground.style.display = "inline";
+            VANISHMAGIC("none");
+            cobblestonebricks.style.display = "inline";
+            startbackground.style.display = "none";
             LightStatus=0;
             // Show grab handles indicating they can be dragged
             labyrinths.forEach(wall => wall.el.style.cursor = 'grab');

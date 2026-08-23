@@ -8,17 +8,18 @@
     <script src="./index.js"></script> 
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.24/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.24/dist/sweetalert2.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 </head>
 
 <body>
 
-    <button id = "signup">SIGN UP</button>
 
     <labirynth id="labyrinth"> 
 
     </labirynth>
 
-    <div class="container">
+    <div class="container1"> </div>
+
         
             <!-- The hidden audio element (no 'controls' attribute makes it invisible) -->
 <audio id="bg-music" loop>
@@ -115,20 +116,54 @@ audio.volume = 0
 </script>
         <!-- <h1>Welcome to My Webpage</h1> -->
             <!-- <img src="./pixil-gif-drawing (9).gif" alt="Image" class="my-image"> -->
-<div class="container">
-            <
+<div class="container1">
 
+
+    <style>
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+</style>
+            <!-- start of settings -->
+
+            <button id="settingsButton" class="material-symbols-outlined">
+              settings
+            </button>
+
+            <div id="settings"> 
+
+            <button id = "signup">SIGN UP</button>
+
+            <button id="switchModeButton">Switch mode</button>
+            <button id="lightSwitch">Toggle Light</button>
+        
+            <div id="wallSettings">
             <input type="text" id="wallTop" class="ronaldoPushka" placeholder="Enter wall top position">
             <input type="text" id="wallLeft" class="ronaldoPushka" placeholder="Enter wall left position">
             <input type="text" id="wallHeight" class="ronaldoPushka" placeholder="Enter wall height">
             <input type="text" id="wallWidth" class="ronaldoPushka" placeholder="Enter wall width">
-            <img id="start_background" src="./Screenshot 2026-07-01 194018.png" alt="Object">
-            <img id="cobblestone_bricks" src="./Screenshot 2026-07-01 193945.png" alt="Object">
-            <button id="switchModeButton" class="button">Switch mode</button>
-            <button id="lightSwitch"class="button">Toggle Light</button>
-            <button id="myButton" class="slide-in-elliptic-top-fwd"> press to start</button> 
-            <button id="wallbutton" class="ronaldoPushka">create a cool wall</button>
+
+            <button id="wallbutton" > Create a cool wall</button>
+            </div>
+
             <button id="deleteButton">delete the wall</button>
+
+            <div class="container"></div>
+
+            </div> 
+            <!-- end of settings -->
+
+
+             <button id="myButton" class="slide-in-elliptic-top-fwd"> press to start</button>
+
+            <!-- <img id="start_background" src="./Screenshot 2026-07-01 194018.png" alt="Object"> -->
+            <!-- <img id="cobblestone_bricks" src="./Screenshot 2026-07-01 193945.png" alt="Object"> -->
+
+            
            <!-- <img id="object" src="./pixil-gif-drawing (9).gif" alt="Object"> -->
     </div>
         
