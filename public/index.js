@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const lightSbtn = document.getElementById("lightSwitch");
     const startbackground = document.getElementById("start_background");
     const cobblestonebricks = document.getElementById("cobblestone_bricks");
-
     let containers = [];
     let keys = {};
     let stumbleguys = [];
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     
     // Global flag to track if we can drag walls or not
-    let isEditMode = false; 
+    let isEditMode = true;
             
     // functionality of the light 
     const labirynth = document.getElementById("labyrinth");
@@ -90,7 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-    
+    function buildTHEFLOOR() {
+        const floor = document.createElement("div");
+        floor.style.width = "100%";
+        floor.style.height = "10%";
+        floor.style.backgroundColor = "invisible";
+        body.appendChild(floor);
+    }
     // CREATE CHARACTER
     function createGuy() {
         const stumbleguy = document.createElement("img");
@@ -116,11 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function createContainer() {
         container.style.display = "inline";
         container.style.width = "100px";
-        container.style.height = "200px";
+        container.style.height = "50px";
         container.style.backgroundColor = "rgba(0, 0, 255, 0.5)";
         container.style.position = "absolute";
         container.style.right = "250px";
-        container.style.top = "10px";
+        container.style.top = "100px";
         container.style.zIndex = "5";
         body.appendChild(container);
         containers.push({
@@ -128,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
             x: 300,
             y: 300,
             width: 100,
-            height: 200
+            height: 50
         });
     }
 
@@ -156,7 +161,18 @@ document.addEventListener("DOMContentLoaded", () => {
             height: height
         });
     } 
-
+    function VANISHMAGIC(gugugaga) {
+        console.log("VANISHMAGIC called with:", gugugaga);
+            wallTopInput.style.display = gugugaga;
+            wallLeftInput.style.display = gugugaga;
+            wallHeightInput.style.display = gugugaga;
+            wallWidthInput.style.display = gugugaga;
+            wallbutton.style.display = gugugaga;
+            deleteButton.style.display = gugugaga;
+            container.style.display = gugugaga;
+            lightSbtn.style.display = gugugaga;
+    } // Initially hide all controls
+VANISHMAGIC("none");
     function isColliding(stumbleguy, labyrinthWall) {
         const stumbleRect = stumbleguy.el.getBoundingClientRect();
         const labyrinthWallRect = labyrinthWall.el.getBoundingClientRect();
@@ -167,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
             stumbleRect.top > labyrinthWallRect.bottom
         );
     }
+    
 
     // KEYBOARD INPUT LISTENERS
     document.addEventListener("keydown", (e) => {
@@ -191,39 +208,24 @@ document.addEventListener("DOMContentLoaded", () => {
     switchModeButton.addEventListener("click", () => {
         isEditMode = !isEditMode; // Toggle logic
         
-        if (!isEditMode) {
-            wallTopInput.style.display = "none";
-            wallLeftInput.style.display = "none";
-            wallHeightInput.style.display = "none";
-            wallWidthInput.style.display = "none";
-            wallbutton.style.display = "none";
-            deleteButton.style.display = "none";
-            container.style.display = "none";
-            lightSbtn.style.display = "none";
+        if (isEditMode) {
+            VANISHMAGIC("none");
+             cobblestonebricks.style.display = "inline";
+            startbackground.style.display = "none";
             
             // Revert cursors to standard behavior
             labyrinths.forEach(wall => wall.el.style.cursor = 'default');
-
-            // --- ОЧИСТКА СТАРЫХ СТЕН И ПОСТРОЙКА БОЛЬШОГО ЛАБИРИНТА ---
-            labyrinths.forEach(wall => wall.el.remove());
-            labyrinths = []; 
-
-            // Строим огромный лабиринт напрямую через функцию
-            buildHugeMaze();
+ 
 
         } else {
-            wallTopInput.style.display = "inline";
-            wallLeftInput.style.display = "inline";
-            wallHeightInput.style.display = "inline";
-            wallWidthInput.style.display = "inline";
-            wallbutton.style.display = "inline";
-            deleteButton.style.display = "inline";
-            container.style.display = "inline";
-            lightSbtn.style.display = "inline";
-            
+            VANISHMAGIC("inline");
+            cobblestonebricks.style.display = "none";
+            startbackground.style.display = "inline";
+            LightStatus=0;
             // Show grab handles indicating they can be dragged
             labyrinths.forEach(wall => wall.el.style.cursor = 'grab');
         }
+
     });
     
     wallbutton.addEventListener("click", () => {
@@ -269,8 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 rgba(255, 255, 255, 0) 100%
                 )
                 `;
-                cobblestonebricks.style.display = "none";
-                startbackground.style.display = "inline";
             } else {
                 labirynth.style.background = `
                 radial-gradient(
@@ -279,8 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rgb(0, 0, 0) 100%
                 )
                 `;
-                cobblestonebricks.style.display = "inline ";
-                startbackground.style.display = "none";
+                
             }
 
             // Sprite Animations

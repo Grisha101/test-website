@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> labyrinth sandbox </title>
+    <title> terarria-type sandbox </title>
     <link rel="stylesheet" href="./style.css">
     <script src="./index.js"></script> 
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.24/dist/sweetalert2.all.min.js"></script>
@@ -23,15 +23,11 @@
             <!-- The hidden audio element (no 'controls' attribute makes it invisible) -->
 <audio id="bg-music" loop>
     <source src="Pufino - Enlivening (freetouse.com).mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
 </audio>
-<script>
+<script type="module">
 var audio = document.getElementById("bg-music");
 audio.volume = 0
-</script>
 
-
-<script type="module">
 
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
@@ -44,7 +40,6 @@ audio.volume = 0
     signOut,
     onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
     // Import the functions you need from the SDKs you need
     // import { initializeApp } from "firebase/app";
     // import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
@@ -61,7 +56,6 @@ audio.volume = 0
     messagingSenderId: "859640141736",
     appId: "1:859640141736:web:74610e01ca7035422aef9d"
     };
-
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const provider = new GoogleAuthProvider();
@@ -74,22 +68,34 @@ audio.volume = 0
             console.error(error);
         }
     }
+    console.log ("=== ПЕРЕВІРКА РЕДИРЕКТУ ===");
+    function checkRedirectResult() {
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result) {
+                    // Користувач успішно увійшов! Тут доступні всі дані:
+                    const user = result.user
+                    console.log("=== УСПІШНИЙ ВХІД ЧЕРЕЗ REDIRECT ===");
+                    console.log("UID:", user.uid);
+                    console.log("Email:", user.email);
+                    console.log("Ім'я:", user.displayName);
 
-    async function checkRedirectResult() {
-        try {
-            const result = await getRedirectResult(auth);
-            if (result && result.user) {
-                console.log(result.user);
-            }
-        } catch (error) {
-            console.error(error);
-        }
+                    // Повний об'єкт у форматі JSON
+                    console.log(JSON.stringify(user, null, 2));
+                }
+            })
+            .catch((error) => {
+                console.error("Помилка при редиректі:", error.code, error.message);
+            });
     }
 
     const sign = document.getElementById("signup");
     sign.addEventListener("click", signInWithGoogle);
 
-    checkRedirectResult();
+    onAuthStateChanged(auth, (user) =>  {
+            console.log("Користувач увійшов:", user.email);
+        
+    });
 
 </script>
 
@@ -109,16 +115,19 @@ audio.volume = 0
 </script>
         <!-- <h1>Welcome to My Webpage</h1> -->
             <!-- <img src="./pixil-gif-drawing (9).gif" alt="Image" class="my-image"> -->
-            <input type="text" id="wallTop" placeholder="Enter wall top position">
-            <input type="text" id="wallLeft" placeholder="Enter wall left position">
-            <input type="text" id="wallHeight" placeholder="Enter wall height">
-            <input type="text" id="wallWidth" placeholder="Enter wall width">
+<div class="container">
+            <
+
+            <input type="text" id="wallTop" class="ronaldoPushka" placeholder="Enter wall top position">
+            <input type="text" id="wallLeft" class="ronaldoPushka" placeholder="Enter wall left position">
+            <input type="text" id="wallHeight" class="ronaldoPushka" placeholder="Enter wall height">
+            <input type="text" id="wallWidth" class="ronaldoPushka" placeholder="Enter wall width">
             <img id="start_background" src="./Screenshot 2026-07-01 194018.png" alt="Object">
             <img id="cobblestone_bricks" src="./Screenshot 2026-07-01 193945.png" alt="Object">
-            <button id="switchModeButton">Switch mode</button>
-            <button id="lightSwitch">Toggle Light</button>
+            <button id="switchModeButton" class="button">Switch mode</button>
+            <button id="lightSwitch"class="button">Toggle Light</button>
             <button id="myButton" class="slide-in-elliptic-top-fwd"> press to start</button> 
-            <button id="wallbutton">create a cool wall</button>
+            <button id="wallbutton" class="ronaldoPushka">create a cool wall</button>
             <button id="deleteButton">delete the wall</button>
            <!-- <img id="object" src="./pixil-gif-drawing (9).gif" alt="Object"> -->
     </div>
